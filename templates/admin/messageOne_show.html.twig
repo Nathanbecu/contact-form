@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Acseo{% endblock %}
+{% set identifier = contactMessage.name ~ ' - ' ~ contactMessage.email  %}
+{% block body %}
+    <div style="height: 100px; background-color: #1e3557;"
+         class="flex-row d-flex justify-content-between align-items-center">
+        <h1 style="text-align: left; font-family: 'Agency FB'; font-size: 70px; padding-left: 100px; color: white">
+            Acseo</h1>
+        <span style="height: 100%; font-family: Poppins; padding-right: 50px;" class="d-flex align-items-center">
+            <a class="" style="text-decoration: none; color: white"
+               href="{{ path('admin_messages_show', {'identifier' : identifier}) }}">Retour</a>
+        </span>
+    </div>
+    <div style="width: 800px; margin: 100px auto; text-align: center; background-color: antiquewhite; border-radius: 20px; padding: 20px">
+        <div>
+            {% if contactMessage.reviewed %}
+                <div class="alert alert-success">état de la révision : revue</div>
+            {% else %}
+                <div class="alert alert-danger">état de la révision : non revue</div>
+            {% endif %}
+        </div>
+        <div>
+            <h4>Id de la demande</h4>
+            <h2>{{ contactMessage.id }}</h2>
+        </div>
+        <div>
+            <h4>Date de la demande</h4>
+            <h2>{{ contactMessage.createdAt.format('d/m/Y') }}</h2>
+        </div>
+        <div>
+            <h4>Sujet de la demande</h4>
+            <h2>{{ contactMessage.title }}</h2>
+        </div>
+        <div>
+            <h4>Nom du demandeur</h4>
+            <h2>{{ contactMessage.name }}</h2>
+        </div>
+        <div>
+            <h4>Email du demandeur</h4>
+            <h2>{{ contactMessage.email }}</h2>
+        </div>
+        <div>
+            <h4>Demande</h4>
+            <h2>{{ contactMessage.message }}</h2>
+        </div>
+        <br>
+        <button id="review" class="btn btn-info">
+            Review cette demande
+        </button>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#review").click(function () {
+                $.post({
+                    url: "{{ absolute_url(path('admin_message_review')) }}",
+                    data: {
+                        'id': "{{ contactMessage.id }}"
+                    },
+                    success: function () {
+                        window.location.reload()
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

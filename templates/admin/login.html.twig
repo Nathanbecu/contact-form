@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion à l'admin{% endblock %}
+
+{% block body %}
+    <style>
+        label {
+            font-family: Poppins;
+        }
+    </style>
+    <div style="display: flex; width: 100%; height: 600px; align-items: center; justify-content: center; flex-direction: column">
+        <h1 style="text-align: center; font-family: Poppins">Acseo Admin</h1>
+        <div style="width: 500px;height: 500px; background-color: #a1ffff; display: flex; flex-direction: column; justify-content: space-around; align-items: center; border-radius: 10px">
+            <h2 style="text-align: center; font-family: Poppins; width: 100%">Connexion à l'admin</h2>
+            <div style="align-items: center; justify-content: space-around; width: 50%">
+                <form method="post">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
+                    <label for="inputEmail">Email</label><br>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus><br>
+                    <label for="inputPassword">Mot de passe</label><br>
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required><br><br>
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+
+                    <button class="btn btn-lg btn-primary" type="submit">
+                        Se connecter
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="display: flex;align-items: center; justify-content: space-between">
+        <h1 style="text-align: left; font-family: 'Agency FB'; font-size: 70px; padding-left: 100px">Acseo</h1>
+        <span style="height: 100%; font-family: Poppins; padding-right: 50px">
+            <a href="{{ path('admin_login') }}">Connexion (Administrateur)</a>
+        </span>
+        <span style="height: 100%; font-family: Poppins; padding-right: 50px">
+            <a href="{{ path('app_register') }}">S'inscrire en tant qu'admin</a>
+        </span>
+    </div>
+    <div style="background-color: #1e3557; padding-top: 50px; padding-bottom: 50px">
+        <h2 style="text-align: center; color: white; font-size: 60px; font-family: Poppins">Contact</h2>
+    </div>
+    <div style="width: 500px; margin: 50px auto">
+        {% if infos is not empty %}
+            <div class="alert alert-primary">
+                {% for info in infos %}
+                    {{ info }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {# {{ form(form) }} #}
+        {{ form_start(form) }}
+        <div class="form-group">
+            <label for="inputtitle">{{ form_label(form.title) }}</label>
+            {{ form_widget(form.title, {'attr' : {'class' : "form-control", 'id' : 'inputtitle'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="inputname">{{ form_label(form.name) }}</label>
+            {{ form_widget(form.name, {'attr' : {'class' : "form-control", 'id' : 'inputname'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="inputemail">{{ form_label(form.email) }}</label>
+            {{ form_widget(form.email, {'attr' : {'type' : 'email', 'class' : "form-control", 'id' : 'inputemail'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="inputmessage">{{ form_label(form.message) }}</label>
+            {{ form_widget(form.message, {'attr' : {'class' : "form-control", 'id' : 'inputmessage'}}) }}
+        </div>
+        {{ form_row(form.submit, {'attr' : {'class' : "btn btn-primary"}}) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

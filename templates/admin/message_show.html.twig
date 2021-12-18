@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Acseo{% endblock %}
+
+{% block body %}
+    <div style="height: 100px; background-color: #1e3557;"
+         class="flex-row d-flex justify-content-between align-items-center">
+        <h1 style="text-align: left; font-family: 'Agency FB'; font-size: 70px; padding-left: 100px; color: white">
+            Acseo</h1>
+        <span style="height: 100%; font-family: Poppins; padding-right: 50px;" class="d-flex align-items-center">
+            <a class="" style="text-decoration: none; color: white" href="{{ path('admin_home') }}">Retour</a>
+        </span>
+    </div>
+    <table class="table">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Email</th>
+            <th scope="col">Message</th>
+            <th scope="col">Revue</th>
+            <th scope="col">Crée le</th>
+            <th scope="col">Actions</th>
+        </tr>
+        {% for contactMessage in contactMessages %}
+            <tr>
+                <th scope="row">{{ contactMessage.id }}</th>
+                <td>{{ contactMessage.name }}</td>
+                <td>{{ contactMessage.email }}</td>
+                <td>{{ contactMessage.message }}</td>
+                <td><input class="form-check-input checkbox" type="checkbox" data-id="{{ contactMessage.id }}"
+                           {% if contactMessage.reviewed %}checked="checked"{% endif %}></td>
+                <td>{{ contactMessage.createdAt.format('d/m/Y') }}</td>
+                <td>
+                    <a href="{{ path('admin_message_show', {id: contactMessage.id}) }}">
+                        <button type="button" class="btn btn-primary">Voir</button>
+                    </a>
+
+                    <button id="{{ contactMessage.id }}" type="button" class="btn btn-primary delete_buttons"
+                            data-toggle="modal" data-target="#modal_delete">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div id="modal_delete" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Voulez vous vraiment supprimer ce message (<span id="delete_id"></span>)?
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Cette action suppirmera le message définitivement</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete_confirm" type="button" class="btn btn-primary">Confirmer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(".delete_buttons").click(function () {
+                let id = this.id
+                $("#delete_id").html(id)
+                $('#delete_confirm').click(function () {
+                    $.post({
+                        url: "{{ absolute_url(path('admin_message_delete')) }}",
+                        data: {
+                            'id': id,
+                        },
+                        success: function (data) {
+                            if (data) {
+                                window.location.reload()
+                            } else {
+                                window.location.reload()
+                                console.log('Une erreur est survenue')
+                            }
+                        },
+                        error: function () {
+                            console.log('Une erreur est survenue')
+                        }
+
+                    })
+                })
+            })
+
+            $(".checkbox").on('change', function () {
+                const review = this.checked;
+                const id = this.dataset.id;
+                $.post({
+                    url: "{{ absolute_url(path('admin_message_review')) }}",
+                    data: {
+                        'id': id,
+                        'review': review,
+                    },
+                })
+            })
+        })
+    </script>
+{% endblock %}
